@@ -1,0 +1,17 @@
+{
+  "name": "dukes-up-randy",
+  "version": "0.0.1",
+  "description": "A command-line project for frontend, backend, and database setup",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Aleksandar Petrovic",
+  "license": "UNLICENSE",
+  "dependencies": {
+    "commander": "^8.3.0",
+    "mkdirp": "^1.0.4",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "vite": "^4.4.3"
+  }
+}
