@@ -3,6 +3,7 @@
 const { program } = require("commander");
 const { parseFrontends, parseBackend } = require("./utils");
 const { createFrontend } = require("./functions/createFrontend");
+const { createBackend } = require("./functions/createBackend");
 
 program
   .name("dukes-up-randy")
@@ -51,9 +52,9 @@ program
       createFrontend({ frontends, projectName, basePath });
     }
 
-    // if (databases) {
-    //   createBackend(databases, projectName, basePath);
-    // }
+    if (databases) {
+      createBackend({ databases, projectName, basePath });
+    }
   });
 
 program.parse(process.argv);
