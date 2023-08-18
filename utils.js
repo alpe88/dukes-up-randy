@@ -2,8 +2,8 @@
 function parseFrontends(value) {
   const frontends = value.split(",");
   return frontends.map((frontend) => {
-    const [name, folder] = frontend.split(":");
-    return { name, folder };
+    const [type, name] = frontend.split(":");
+    return { type, name };
   });
 }
 
@@ -11,8 +11,8 @@ function parseFrontends(value) {
 function parseDatabases(value) {
   const databases = value.split(",");
   return databases.map((database) => {
-    const [name, alias] = database.split(":");
-    return { name, alias };
+    const [type, name] = database.split(":");
+    return { type, name };
   });
 }
 

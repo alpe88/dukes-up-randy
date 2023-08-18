@@ -22,15 +22,18 @@ function createFrontend({ frontends, projectName, basePath }) {
 
   //Create subfolders for frontends
   frontends.forEach((frontend) => {
-    const { name, folder } = frontend;
-    const frontendDir = path.join(projectDir, folder);
+    const { type, name } = frontend;
+    const frontendDir = path.join(projectDir, name);
 
-    mkdirp.sync(frontendDir);
+    // Create directories
+    mkdirp.sync(frontendDir, {
+      recursive: true,
+    });
 
     // Execute Vite setup with template presets
-    const templatePreset = supportedFrontends[name];
+    const templatePreset = supportedFrontends[type];
     if (!templatePreset) {
-      console.error(`Unsupported frontend: ${name}`);
+      console.error(`Unsupported frontend: ${type}`);
     }
 
     execSync(
