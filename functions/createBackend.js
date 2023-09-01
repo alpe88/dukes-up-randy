@@ -3,7 +3,7 @@
 const mkdirp = require("mkdirp");
 const path = require("path");
 const { DIRECTORIES } = require("../constants");
-const { setup: sqliteSetup } = require("./sqLite");
+const { setup: sqliteSetup } = require("./sqLite/setup");
 
 function createBackend({ databases, projectName, basePath }) {
   const projectDir = path.join(basePath, projectName, DIRECTORIES.BACKEND);
