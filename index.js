@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require("commander");
-const { parseFrontends, parseBackend } = require("./utils");
+const { parseOptions } = require("./utils");
 const { createFrontend } = require("./functions/createFrontend");
 const { createBackend } = require("./functions/createBackend");
 
@@ -23,12 +23,12 @@ program
   .option(
     "-f, --frontends <frontends...>",
     "Specify the frontends: vue:my-vue, react:my-react",
-    parseFrontends
+    parseOptions
   )
   .option(
     "-d, --databases <databases...>",
     "Specify the databases: postgresql:my-postgres, mongo:my-mongo, sqlite:my-sqlite",
-    parseBackend
+    parseOptions
   )
   .description("Create folder structure for frontend, backend, or both")
   .action((options) => {
@@ -46,8 +46,8 @@ program
       );
     }
 
-    const basePath = path || process.cwd();
-
+    const basePath = path ? path : process.cwd();
+    console.log({ basePath });
     if (frontends) {
       createFrontend({ frontends, projectName, basePath });
     }
