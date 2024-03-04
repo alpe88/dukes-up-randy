@@ -4,7 +4,7 @@ const path = require("path");
 // Function to initialize the database and return the instance
 function initialize() {
   // Define the path to your database file
-  const dbPath = path.join(__dirname, "{{DATABASE_FILE_PATH}}"); // Updated placeholder
+  const dbPath = path.join(__dirname, "{{DATABASE_FILE_PATH}}");
 
   // Create and configure the database instance
   const db = new Database(dbPath, {
