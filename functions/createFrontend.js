@@ -3,7 +3,7 @@
 const mkdirp = require("mkdirp");
 const path = require("path");
 const { execSync } = require("child_process");
-const { DIRECTORIES } = require("../constants");
+const { DIRECTORIES } = require("../_lib/constants");
 
 function createFrontend({ frontends, projectName, basePath }) {
   const projectDir = path.join(basePath, projectName, DIRECTORIES.FRONTEND);
@@ -18,6 +18,10 @@ function createFrontend({ frontends, projectName, basePath }) {
     vue: "vue",
     react: "react",
     preact: "preact",
+    vuets: "vue-ts",
+    reactts: "react-ts",
+    preactts: "preact-ts",
+    nextjs: "nextjs",
   };
 
   //Create subfolders for frontends
@@ -36,10 +40,12 @@ function createFrontend({ frontends, projectName, basePath }) {
       console.error(`Unsupported frontend: ${type}`);
     }
 
-    execSync(
-      `cd ${frontendDir} && npm create vite@latest . -- --template ${templatePreset}`,
-      { stdio: "inherit" }
-    );
+    const command =
+      templatePreset === supportedFrontends.nextjs
+        ? `npx create-next-app@latest ${projectName}`
+        : `npm create vite@latest . -- --template ${templatePreset}`;
+
+    execSync(`cd ${frontendDir} && ${command}`, { stdio: "inherit" });
   });
 
   console.log("Folder structure created successfully.");
