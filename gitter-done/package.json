@@ -1,0 +1,16 @@
+{
+  "name": "gitter-done",
+  "version": "0.1.0",
+  "description": "CLI for managing projects and milestones",
+  "main": "index.js",
+  "bin": {
+    "gitter-done": "index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "UNLICENSE",
+  "dependencies": {
+    "commander": "^14.0.2"
+  }
+}
