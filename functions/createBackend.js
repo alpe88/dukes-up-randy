@@ -2,7 +2,7 @@
 
 const mkdirp = require("mkdirp");
 const path = require("path");
-const { DIRECTORIES } = require("../constants");
+const { DIRECTORIES } = require("../_lib/constants");
 const { setup: sqliteSetup } = require("./sqLite/setup");
 
 function createBackend({ databases, projectName, basePath }) {

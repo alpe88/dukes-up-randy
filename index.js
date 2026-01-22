@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 const { program } = require("commander");
-const { parseOptions } = require("./utils");
+const { parseOptions } = require("./_lib/utils");
+const packageJson = require("./package.json");
 const { createFrontend } = require("./functions/createFrontend");
 const { createBackend } = require("./functions/createBackend");
 
 program
   .name("dukes-up-randy")
-  .version("0.0.3")
+  .version(packageJson.version)
   .description(
     "Create a folder structure for a project with multiple frontends and databases"
   );

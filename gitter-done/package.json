@@ -10,6 +10,25 @@
     "node": ">=20"
   },
   "license": "UNLICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alpe88/dukes-up-randy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alpe88/dukes-up-randy/issues"
+  },
+  "homepage": "https://github.com/alpe88/dukes-up-randy/tree/main/gitter-done#readme",
+  "keywords": [
+    "cli",
+    "roadmap",
+    "milestones",
+    "project-management"
+  ],
+  "files": [
+    "index.js",
+    "lib",
+    "README.md"
+  ],
   "dependencies": {
     "commander": "^14.0.2"
   }
