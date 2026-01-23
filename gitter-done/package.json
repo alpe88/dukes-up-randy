@@ -30,6 +30,8 @@
     "README.md"
   ],
   "dependencies": {
+    "@octokit/graphql": "^9.0.3",
+    "@octokit/rest": "^22.0.1",
     "commander": "^14.0.2"
   }
 }

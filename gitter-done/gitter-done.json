@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "createdAt": "2026-01-23T03:52:25.849Z",
+    "updatedAt": "2026-01-23T03:52:25.938Z"
+  },
+  "projects": [
+    {
+      "id": "proj-my-first-project-hdtxxg",
+      "name": "My First Project",
+      "status": "active",
+      "milestones": [],
+      "createdAt": "2026-01-23T03:52:25.937Z",
+      "updatedAt": "2026-01-23T03:52:25.937Z",
+      "description": "A test project"
+    }
+  ]
+}
