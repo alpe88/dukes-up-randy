@@ -3,9 +3,34 @@
   "version": "0.0.1",
   "description": "A command-line project for frontend, backend, and database setup",
   "main": "index.js",
+  "bin": {
+    "dukes-up-randy": "index.js"
+  },
   "scripts": {},
   "author": "Aleksandar Petrovic",
   "license": "UNLICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alpe88/dukes-up-randy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alpe88/dukes-up-randy/issues"
+  },
+  "homepage": "https://github.com/alpe88/dukes-up-randy#readme",
+  "keywords": [
+    "cli",
+    "scaffold",
+    "frontend",
+    "backend",
+    "database"
+  ],
+  "files": [
+    "index.js",
+    "functions",
+    "_lib",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "commander": "^8.3.0",
     "mkdirp": "^1.0.4",
