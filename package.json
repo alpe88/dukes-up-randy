@@ -1,6 +1,6 @@
 {
   "name": "dukes-up-randy",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A command-line project for frontend, backend, and database setup",
   "main": "index.js",
   "bin": {

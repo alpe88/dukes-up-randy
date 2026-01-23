@@ -158,16 +158,21 @@ project
   )
   .description("Add a project to the roadmap")
   .action((name, options) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      exitWithError("Project name cannot be empty or whitespace-only.");
+    }
+
     const filePath = getFilePath();
     const roadmap = getRoadmap(filePath, { createIfMissing: true });
-    const normalizedName = normalize(name);
+    const normalizedName = normalize(trimmedName);
 
     if (
       roadmap.projects.some(
         (existing) => existing.name && normalize(existing.name) === normalizedName
       )
     ) {
-      exitWithError(`Project "${name}" already exists.`);
+      exitWithError(`Project "${trimmedName}" already exists.`);
     }
 
     const status = ensureValidStatus(
@@ -178,8 +183,8 @@ project
 
     const now = new Date().toISOString();
     const projectRecord = {
-      id: generateId("proj", name),
-      name,
+      id: generateId("proj", trimmedName),
+      name: trimmedName,
       status,
       milestones: [],
       createdAt: now,
@@ -196,7 +201,7 @@ project
 
     roadmap.projects.push(projectRecord);
     saveRoadmap(filePath, roadmap);
-    console.log(`Added project "${name}".`);
+    console.log(`Added project "${trimmedName}".`);
   });
 
 project
@@ -259,8 +264,11 @@ project
 
     const updates = {};
 
-    if (options.name) {
+    if (options.name !== undefined) {
       const nextName = options.name.trim();
+      if (!nextName) {
+        exitWithError("Project name cannot be empty or whitespace-only.");
+      }
       const normalizedName = normalize(nextName);
       const conflict = roadmap.projects.find(
         (existing) =>
@@ -345,6 +353,11 @@ milestone
   )
   .description("Add a milestone to a project")
   .action((projectRef, name, options) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      exitWithError("Milestone name cannot be empty or whitespace-only.");
+    }
+
     const filePath = getFilePath();
     const roadmap = getRoadmap(filePath, { createIfMissing: true });
     const projectRecord = findProject(roadmap, projectRef);
@@ -353,14 +366,14 @@ milestone
       exitWithError(`Project "${projectRef}" not found.`);
     }
 
-    const normalizedName = normalize(name);
+    const normalizedName = normalize(trimmedName);
     if (
       (projectRecord.milestones || []).some(
         (existing) =>
           existing.name && normalize(existing.name) === normalizedName
       )
     ) {
-      exitWithError(`Milestone "${name}" already exists for this project.`);
+      exitWithError(`Milestone "${trimmedName}" already exists for this project.`);
     }
 
     ensureValidDate(options.start, "Start date");
@@ -374,8 +387,8 @@ milestone
 
     const now = new Date().toISOString();
     const milestoneRecord = {
-      id: generateId("ms", name),
-      name,
+      id: generateId("ms", trimmedName),
+      name: trimmedName,
       status,
       createdAt: now,
       updatedAt: now,
@@ -405,7 +418,7 @@ milestone
     projectRecord.milestones.push(milestoneRecord);
     projectRecord.updatedAt = now;
     saveRoadmap(filePath, roadmap);
-    console.log(`Added milestone "${name}" to "${projectRecord.name}".`);
+    console.log(`Added milestone "${trimmedName}" to "${projectRecord.name}".`);
   });
 
 milestone
@@ -515,8 +528,11 @@ milestone
 
     const updates = {};
 
-    if (options.name) {
+    if (options.name !== undefined) {
       const nextName = options.name.trim();
+      if (!nextName) {
+        exitWithError("Milestone name cannot be empty or whitespace-only.");
+      }
       const normalizedName = normalize(nextName);
       const conflict = (projectRecord.milestones || []).find(
         (existing) =>
@@ -543,13 +559,21 @@ milestone
     }
 
     if (options.start !== undefined) {
-      ensureValidDate(options.start, "Start date");
-      updates.startDate = options.start;
+      if (options.start === "") {
+        updates.startDate = "";
+      } else {
+        ensureValidDate(options.start, "Start date");
+        updates.startDate = options.start;
+      }
     }
 
     if (options.due !== undefined) {
-      ensureValidDate(options.due, "Due date");
-      updates.dueDate = options.due;
+      if (options.due === "") {
+        updates.dueDate = "";
+      } else {
+        ensureValidDate(options.due, "Due date");
+        updates.dueDate = options.due;
+      }
     }
 
     if (options.status) {
