@@ -43,30 +43,45 @@ oar template --stdout
 export CURSOR_API_KEY="your-token"
 oar launch \
   --plan oar-plan.json \
-  --provider-config cursor-provider.json
+  --repo https://github.com/your-org/your-repo \
+  --ref main
 ```
 
 By default, `launch` starts one agent per top-level task group. Use subtask mode
 to launch per subtask:
 
 ```bash
-oar launch --plan oar-plan.json --mode subtask --provider-config cursor-provider.json
+oar launch --plan oar-plan.json --mode subtask --repo https://github.com/your-org/your-repo
 ```
 
 To preview the requests without sending them:
 
 ```bash
-oar launch --plan oar-plan.json --dry-run --provider-config cursor-provider.json
+oar launch --plan oar-plan.json --dry-run --repo https://github.com/your-org/your-repo
 ```
 
 ## Provider config
 
 Launch requests are driven by a provider config JSON file. Start from the
-example at `templates/cursor-provider.json` and fill in the
-`launch_endpoint` from the Cursor Cloud Agent API docs:
+example at `templates/cursor-provider.json` or rely on the built-in Cursor
+defaults (`https://api.cursor.com/v0/agents`).
 
-https://cursor.com/docs/cloud-agent/api/endpoints#launch-an-agent
+https://docs.cursor.com/cloud-agent/api/endpoints#launch-an-agent
 
 The config supports placeholder values such as `${prompt}`, `${task_id}`, and
-`${agent_name}`. The API key is read from `CURSOR_API_KEY` by default or can be
-passed with `--api-key`.
+`${agent_name}`. The API key is read from `CURSOR_API_KEY` by default; you can
+also pass `--api-key`, but note that command-line arguments can be visible in
+shell history and process listings.
+
+### Cursor-specific options
+
+- `--repo <url>`: sets `source.repository`
+- `--ref <ref>`: sets `source.ref`
+- `--pr-url <url>`: sets `source.prUrl` (overrides repo/ref)
+- `--model <name>`: sets `model`
+- `--auto-create-pr`: sets `target.autoCreatePr`
+- `--open-as-cursor-github-app`: sets `target.openAsCursorGithubApp`
+- `--skip-reviewer-request`: sets `target.skipReviewerRequest`
+- `--branch-name <name>`: sets `target.branchName`
+- `--auto-branch <true|false>`: sets `target.autoBranch`
+- `--webhook-url <url>` / `--webhook-secret <secret>`: sets webhook fields

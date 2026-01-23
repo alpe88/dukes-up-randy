@@ -3,23 +3,34 @@ const path = require("path");
 
 const DEFAULT_PROVIDER_CONFIG = {
   name: "cursor",
-  base_url: "https://cursor.com",
-  launch_endpoint: "",
+  base_url: "https://api.cursor.com",
+  launch_endpoint: "/v0/agents",
   api_key_env: "CURSOR_API_KEY",
   method: "POST",
   headers: {
-    Authorization: "Bearer ${api_key}",
+    Authorization: "Basic ${basic_auth}",
     "Content-Type": "application/json",
   },
   body: {
-    prompt: "${prompt}",
-    metadata: {
-      plan_title: "${plan_title}",
-      task_id: "${task_id}",
-      task_name: "${task_name}",
-      subtask_id: "${subtask_id}",
-      subtask_goal: "${subtask_goal}",
-      agent_name: "${agent_name}",
+    prompt: {
+      text: "${prompt}",
+    },
+    model: "${model}",
+    source: {
+      repository: "${repository}",
+      ref: "${ref}",
+      prUrl: "${pr_url}",
+    },
+    target: {
+      autoCreatePr: "${auto_create_pr}",
+      openAsCursorGithubApp: "${open_as_cursor_github_app}",
+      skipReviewerRequest: "${skip_reviewer_request}",
+      branchName: "${branch_name}",
+      autoBranch: "${auto_branch}",
+    },
+    webhook: {
+      url: "${webhook_url}",
+      secret: "${webhook_secret}",
     },
   },
 };
@@ -73,6 +84,9 @@ function resolveProviderConfig({
     );
   }
 
+  if (!config.name) {
+    config.name = provider || "custom";
+  }
   if (baseUrl) {
     config.base_url = baseUrl;
   }
@@ -97,35 +111,109 @@ function resolveApiKey(apiKey, config) {
   return fromEnv;
 }
 
-function applyTemplate(value, context) {
+function applyTemplate(value, context, missing = new Set()) {
   if (typeof value === "string") {
-    return value.replace(/\$\{([^}]+)\}/g, (_, key) => {
-      const replacement = context[key.trim()];
+    const replaced = value.replace(/\$\{([^}]+)\}/g, (_, key) => {
+      const lookup = key.trim();
+      const replacement = context[lookup];
       if (replacement === undefined || replacement === null) {
+        missing.add(lookup);
         return "";
       }
       return String(replacement);
     });
+    return { value: replaced, missing };
   }
   if (Array.isArray(value)) {
-    return value.map((item) => applyTemplate(item, context));
+    const items = value.map((item) => applyTemplate(item, context, missing).value);
+    return { value: items, missing };
   }
   if (value && typeof value === "object") {
     const result = {};
     Object.entries(value).forEach(([key, entry]) => {
-      result[key] = applyTemplate(entry, context);
+      result[key] = applyTemplate(entry, context, missing).value;
     });
-    return result;
+    return { value: result, missing };
+  }
+  return { value, missing };
+}
+
+function pruneEmpty(value) {
+  if (Array.isArray(value)) {
+    const next = value
+      .map((item) => pruneEmpty(item))
+      .filter((item) => item !== undefined);
+    return next.length ? next : undefined;
+  }
+  if (value && typeof value === "object") {
+    const result = {};
+    Object.entries(value).forEach(([key, entry]) => {
+      const pruned = pruneEmpty(entry);
+      if (pruned !== undefined) {
+        result[key] = pruned;
+      }
+    });
+    return Object.keys(result).length ? result : undefined;
+  }
+  if (value === "" || value === null || value === undefined) {
+    return undefined;
   }
   return value;
 }
 
+function coerceBooleanFields(body, paths) {
+  if (!body || typeof body !== "object") {
+    return;
+  }
+  paths.forEach((path) => {
+    let current = body;
+    for (let i = 0; i < path.length - 1; i += 1) {
+      if (!current || typeof current !== "object") {
+        return;
+      }
+      current = current[path[i]];
+    }
+    if (!current || typeof current !== "object") {
+      return;
+    }
+    const key = path[path.length - 1];
+    const value = current[key];
+    if (typeof value !== "string") {
+      return;
+    }
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "true") {
+      current[key] = true;
+    } else if (normalized === "false") {
+      current[key] = false;
+    }
+  });
+}
+
 function buildLaunchRequest(config, context) {
-  const url = new URL(config.launch_endpoint, config.base_url).toString();
-  const headers = applyTemplate(config.headers || {}, context);
-  const body = applyTemplate(config.body || {}, context);
+  let url;
+  try {
+    url = new URL(config.launch_endpoint, config.base_url).toString();
+  } catch (error) {
+    throw new Error(
+      `Invalid provider URL. base_url="${config.base_url}", ` +
+        `launch_endpoint="${config.launch_endpoint}". ${error.message}`
+    );
+  }
+  const missing = new Set();
+  const headers = applyTemplate(config.headers || {}, context, missing).value;
+  const body = applyTemplate(config.body || {}, context, missing).value;
   const method = (config.method || "POST").toUpperCase();
-  return { url, method, headers, body };
+  const prunedBody = pruneEmpty(body) || {};
+  if (config.name === "cursor") {
+    coerceBooleanFields(prunedBody, [
+      ["target", "autoCreatePr"],
+      ["target", "openAsCursorGithubApp"],
+      ["target", "skipReviewerRequest"],
+      ["target", "autoBranch"],
+    ]);
+  }
+  return { url, method, headers, body: prunedBody, missing };
 }
 
 function redactHeaders(headers) {

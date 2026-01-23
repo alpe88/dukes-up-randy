@@ -105,6 +105,8 @@ function validatePlan(plan) {
   if (!Array.isArray(plan.tasks)) {
     errors.push("Plan tasks must be an array.");
   } else {
+    const taskIds = new Set();
+    const dependencyMap = new Map();
     plan.tasks.forEach((task, index) => {
       if (!task || typeof task !== "object") {
         errors.push(`Task ${index + 1} must be an object.`);
@@ -112,9 +114,22 @@ function validatePlan(plan) {
       }
       if (!task.id || typeof task.id !== "string") {
         errors.push(`Task ${index + 1} is missing a string id.`);
+      } else if (taskIds.has(task.id)) {
+        errors.push(`Task id "${task.id}" is duplicated.`);
+      } else {
+        taskIds.add(task.id);
       }
       if (!task.name || typeof task.name !== "string") {
         errors.push(`Task ${index + 1} is missing a string name.`);
+      }
+      if (task.depends_on !== undefined && !Array.isArray(task.depends_on)) {
+        errors.push(
+          `Task ${index + 1} depends_on must be an array if provided.`
+        );
+      }
+      const dependsOn = Array.isArray(task.depends_on) ? task.depends_on : [];
+      if (task.id && typeof task.id === "string") {
+        dependencyMap.set(task.id, dependsOn);
       }
       if (task.subtasks !== undefined && !Array.isArray(task.subtasks)) {
         errors.push(
@@ -140,6 +155,43 @@ function validatePlan(plan) {
           }
         });
       }
+    });
+
+    dependencyMap.forEach((dependencies, taskId) => {
+      dependencies.forEach((dependency) => {
+        if (!taskIds.has(dependency)) {
+          errors.push(
+            `Task "${taskId}" depends_on "${dependency}", which was not found.`
+          );
+        }
+      });
+    });
+
+    const visited = new Set();
+    const visiting = new Set();
+    function detectCycle(taskId, chain) {
+      if (visiting.has(taskId)) {
+        errors.push(
+          `Task dependency cycle detected: ${chain.join(" -> ")} -> ${taskId}`
+        );
+        return;
+      }
+      if (visited.has(taskId)) {
+        return;
+      }
+      visiting.add(taskId);
+      const deps = dependencyMap.get(taskId) || [];
+      deps.forEach((dep) => {
+        if (taskIds.has(dep)) {
+          detectCycle(dep, [...chain, taskId]);
+        }
+      });
+      visiting.delete(taskId);
+      visited.add(taskId);
+    }
+
+    dependencyMap.forEach((_, taskId) => {
+      detectCycle(taskId, []);
     });
   }
   return errors;
