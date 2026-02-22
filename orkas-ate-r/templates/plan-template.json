@@ -1,0 +1,81 @@
+{
+  "title": "<one-line plan title>",
+  "scope_constraints": {
+    "runtime": "<nodejs version or other constraint>",
+    "feature_parity": "<true|false>",
+    "lambda_granularity": "<one endpoint per lambda|domain lambda|...>",
+    "incremental_migration": "<notes>",
+    "admin_testing_ui": "<notes>",
+    "infra": "<notes>"
+  },
+  "assumptions": [
+    "<assumption 1>",
+    "<assumption 2>"
+  ],
+  "open_questions": [
+    "<question 1>",
+    "<question 2>"
+  ],
+  "tasks": [
+    {
+      "id": "Task 1",
+      "name": "<group name>",
+      "depends_on": [],
+      "subtasks": [
+        {
+          "id": "Task 1A",
+          "goal": "<goal>",
+          "edits": [
+            "<edit summary 1>",
+            "<edit summary 2>"
+          ],
+          "files": [
+            "<path/to/file-1>",
+            "<path/to/file-2>"
+          ],
+          "validation": [
+            "<how to validate>"
+          ],
+          "commit": "<action: brief sentence>"
+        }
+      ]
+    },
+    {
+      "id": "Task 2",
+      "name": "<group name>",
+      "depends_on": [
+        "Task 1"
+      ],
+      "subtasks": [
+        {
+          "id": "Task 2A",
+          "goal": "<goal>",
+          "edits": [
+            "<edit summary>"
+          ],
+          "files": [
+            "<path/to/file>"
+          ],
+          "validation": [
+            "<how to validate>"
+          ],
+          "commit": "<action: brief sentence>"
+        },
+        {
+          "id": "Task 2B",
+          "goal": "<goal>",
+          "edits": [
+            "<edit summary>"
+          ],
+          "files": [
+            "<path/to/file>"
+          ],
+          "validation": [
+            "<how to validate>"
+          ],
+          "commit": "<action: brief sentence>"
+        }
+      ]
+    }
+  ]
+}

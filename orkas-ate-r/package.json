@@ -1,0 +1,37 @@
+{
+  "name": "orkas-ate-r",
+  "version": "0.1.0",
+  "description": "CLI for generating task plans and launching cloud agents",
+  "main": "index.js",
+  "bin": {
+    "oar": "index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "UNLICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alpe88/dukes-up-randy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alpe88/dukes-up-randy/issues"
+  },
+  "homepage": "https://github.com/alpe88/dukes-up-randy/tree/main/orkas-ate-r#readme",
+  "keywords": [
+    "cli",
+    "planning",
+    "cloud",
+    "agents",
+    "tasks"
+  ],
+  "files": [
+    "index.js",
+    "lib",
+    "templates",
+    "README.md"
+  ],
+  "dependencies": {
+    "commander": "^14.0.2"
+  }
+}

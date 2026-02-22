@@ -1,0 +1,33 @@
+{
+  "name": "cursor",
+  "base_url": "https://api.cursor.com",
+  "launch_endpoint": "/v0/agents",
+  "api_key_env": "CURSOR_API_KEY",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Basic ${basic_auth}",
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "prompt": {
+      "text": "${prompt}"
+    },
+    "model": "${model}",
+    "source": {
+      "repository": "${repository}",
+      "ref": "${ref}",
+      "prUrl": "${pr_url}"
+    },
+    "target": {
+      "autoCreatePr": "${auto_create_pr}",
+      "openAsCursorGithubApp": "${open_as_cursor_github_app}",
+      "skipReviewerRequest": "${skip_reviewer_request}",
+      "branchName": "${branch_name}",
+      "autoBranch": "${auto_branch}"
+    },
+    "webhook": {
+      "url": "${webhook_url}",
+      "secret": "${webhook_secret}"
+    }
+  }
+}
