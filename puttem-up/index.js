@@ -7,7 +7,7 @@ const { createFrontend } = require("./functions/createFrontend");
 const { createBackend } = require("./functions/createBackend");
 
 program
-  .name("dukes-up-randy")
+  .name("puttem-up")
   .version(packageJson.version)
   .description(
     "Create a folder structure for a project with multiple frontends and databases"

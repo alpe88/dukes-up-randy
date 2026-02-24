@@ -1,12 +1,7 @@
 {
   "name": "dukes-up-randy",
   "version": "0.0.3",
-  "description": "A command-line project for frontend, backend, and database setup",
-  "main": "index.js",
-  "bin": {
-    "dukes-up-randy": "index.js"
-  },
-  "scripts": {},
+  "description": "Monorepo of CLI tools: puttem-up, gitter-done, orkas-ate-r",
   "author": "Aleksandar Petrovic",
   "license": "UNLICENSE",
   "repository": {
@@ -17,27 +12,9 @@
     "url": "https://github.com/alpe88/dukes-up-randy/issues"
   },
   "homepage": "https://github.com/alpe88/dukes-up-randy#readme",
-  "keywords": [
-    "cli",
-    "scaffold",
-    "frontend",
-    "backend",
-    "database"
-  ],
-  "files": [
-    "index.js",
-    "functions",
-    "_lib",
-    "README.md",
-    "LICENSE"
-  ],
-  "dependencies": {
-    "commander": "^8.3.0",
-    "mkdirp": "^1.0.4",
-    "path": "^0.12.7"
-  },
-  "devDependencies": {
-    "vite": "^4.4.3",
-    "better-sqlite3": "^8.5.1"
-  }
+  "workspaces": [
+    "puttem-up",
+    "gitter-done",
+    "orkas-ate-r"
+  ]
 }

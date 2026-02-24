@@ -1,0 +1,34 @@
+{
+  "name": "puttem-up",
+  "version": "0.0.3",
+  "description": "CLI scaffolding tool for frontend, backend, and database setup",
+  "main": "index.js",
+  "bin": {
+    "puttem-up": "index.js"
+  },
+  "scripts": {},
+  "author": "Aleksandar Petrovic",
+  "license": "UNLICENSE",
+  "keywords": [
+    "cli",
+    "scaffold",
+    "frontend",
+    "backend",
+    "database"
+  ],
+  "files": [
+    "index.js",
+    "functions",
+    "_lib",
+    "README.md"
+  ],
+  "dependencies": {
+    "commander": "^8.3.0",
+    "mkdirp": "^1.0.4",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "vite": "^4.4.3",
+    "better-sqlite3": "^8.5.1"
+  }
+}
